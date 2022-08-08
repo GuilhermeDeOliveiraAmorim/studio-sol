@@ -163,7 +163,9 @@ table {
 }
 
 .title {
-    padding: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     color: var(--orange);
     text-transform: uppercase;
     font-weight: 700;
