@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Qual é o número?</title>
+
+        <link
+            href="https://fonts.googleapis.com/css?family=Dosis:400,700"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+        />
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 class="title">Qual é o número?</h1>
+            <hr class="hr" />
+            <p class="resposta" id="resposta"></p>
+            <p class="palpite" id="palpite">000</p>
+            <button
+                class="nova_partida"
+                id="nova_partida"
+                onclick="novaPartida()"
+            >
+                <i class="fa-solid fa-arrow-rotate-right"></i> Nova Partida
+            </button>
+            <div class="enviar">
+                <input
+                    class="input_border"
+                    type="number"
+                    name="numero"
+                    id="numero"
+                    placeholder="Digite o palpite"
+                />
+                <button id="enviar_btn" onclick="getPalpite()">Enviar</button>
+            </div>
+        </div>
+        <script src="scripts.js"></script>
+    </body>
+</html>
