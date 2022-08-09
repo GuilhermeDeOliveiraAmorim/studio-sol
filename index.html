@@ -23,7 +23,8 @@
             <h1 class="title">Qual é o número?</h1>
             <hr class="hr" />
             <p class="resposta" id="resposta"></p>
-            <p class="palpite" id="palpite">000</p>
+            <div id="display" class="numbers_svg">
+            </div>
             <button
                 class="nova_partida"
                 id="nova_partida"
@@ -37,6 +38,8 @@
                     type="number"
                     name="numero"
                     id="numero"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    maxlength="3"
                     placeholder="Digite o palpite"
                 />
                 <button id="enviar_btn" onclick="getPalpite()">Enviar</button>

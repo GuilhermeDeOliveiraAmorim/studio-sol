@@ -163,7 +163,6 @@ table {
 }
 
 .title {
-    padding-bottom: 20px;
     padding-left: 20px;
     padding-right: 20px;
     color: var(--orange);
@@ -182,17 +181,6 @@ table {
 .nova_partida {
     margin: 20px;
 }
-
-/* .input_border {
-    border-radius: 5px;
-    border: solid 2px var(--orange);
-    padding: 5px;
-}
-
-.input_border[type=number]:focus {
-    border: 1px solid var(--orange);
-    border-radius: 5px;
-} */
 
 input[type=number] {
     padding: 5px;
@@ -228,4 +216,15 @@ button {
 
 .green {
     color: var(--green);
+}
+
+.numbers_svg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: row;
+    gap: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
 }

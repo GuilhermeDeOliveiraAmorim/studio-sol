@@ -4,6 +4,29 @@
 document.getElementById("nova_partida").style.display = "none";
 
 /**
+ *
+ */
+var divDisplay = document.getElementById("display");
+
+var imgEl = document.createElement("img");
+imgEl.src = "normal" + "/" + "normal" + "-00.svg";
+imgEl.height = "50";
+imgEl.id = 1;
+divDisplay.appendChild(imgEl);
+
+imgEl = document.createElement("img");
+imgEl.src = "normal" + "/" + "normal" + "-00.svg";
+imgEl.height = "50";
+imgEl.id = 2;
+divDisplay.appendChild(imgEl);
+
+imgEl = document.createElement("img");
+imgEl.src = "normal" + "/" + "normal" + "-00.svg";
+imgEl.height = "50";
+imgEl.id = 3;
+divDisplay.appendChild(imgEl);
+
+/**
  * Inicia a variável que receberá o valor da requisição
  */
 var apiNumber = 0;
@@ -34,6 +57,10 @@ request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
         apiNumber = data.value;
     } else if (request.status == 502) {
+        removeElement(1);
+        removeElement(2);
+        removeElement(3);
+        writeNumbers(502, "erro");
         setErro502();
     } else {
         const errorDiv = document.getElementById("error");
@@ -53,25 +80,52 @@ request.onload = function () {
  * palpite e falso, caso não, retorna setPalpite
  * com "Você acertou!", palpite e true, além da
  * função setAcerto. Caso palpite tenha valor
- * nulo, retorna a função setErrNull. Por fim,
- * reseta o valor de palpite com string vazia.
+ * nulo, retorna a função setErrNull. Já,
+ * setErrNegative, verifica se o valor do palpite
+ * é menor do que zero. Por fim, reseta o valor
+ * de palpite com string vazia.
  */
 function getPalpite() {
-    const palpite = document.getElementById("numero").value;
+    var palpite = document.getElementById("numero").value;
 
-    if (palpite != "") {
-        if (apiNumber < palpite) {
-            setPalpite("É menor!", palpite, false);
-        } else if (apiNumber > palpite) {
-            setPalpite("É maior!", palpite, false);
-        } else {
-            setPalpite("Você acertou!!! ", palpite, true);
-            setAcerto();
-        }
+    if (palpite < 0) {
+        setErrNegative();
     } else {
-        setErrNull()
+        if (palpite != "") {
+            if (document.getElementById("1") != null) {
+                removeElement(1);
+            }
+
+            if (document.getElementById("2") != null) {
+                removeElement(2);
+            }
+
+            if (document.getElementById("3") != null) {
+                removeElement(3);
+            }
+
+            if (apiNumber < palpite) {
+                writeNumbers(palpite, "menor");
+                setPalpite("É menor!", palpite, false);
+            } else if (apiNumber > palpite) {
+                writeNumbers(palpite, "maior");
+                setPalpite("É maior!", palpite, false);
+            } else {
+                writeNumbers(palpite, "igual");
+                setPalpite("Você acertou!!! ", palpite, true);
+                setAcerto();
+            }
+        } else {
+            setErrNull();
+        }
     }
-    palpite = document.getElementById("numero").value = "";
+
+    document.getElementById("numero").value = "";
+}
+
+function removeElement(num) {
+    const element = document.getElementById(num);
+    element.remove();
 }
 
 /**
@@ -81,9 +135,9 @@ function getPalpite() {
  * resposta e palpite, utilizando para isso, as
  * funções setPalpiteElementTrue e
  * setPalpiteElementFalse.
- * @param {*} srt 
- * @param {*} num 
- * @param {*} color 
+ * @param {*} srt
+ * @param {*} num
+ * @param {*} color
  */
 function setPalpite(srt, num, color) {
     if (color == true) {
@@ -110,8 +164,6 @@ function novaPartida() {
  * escrita no campo de texto.
  */
 function setErro502() {
-    document.getElementById("palpite").innerText = "502";
-    document.getElementById("palpite").style.color = "#CC3300";
     document.getElementById("resposta").innerText = "ERRO";
     document.getElementById("resposta").style.color = "#CC3300";
     document.getElementById("nova_partida").style.display = "block";
@@ -143,77 +195,159 @@ function setErrNull() {
 
 /**
  * Função para alterar o estado dos elements que exibem
+ * a resposta, com formato de mensagem de erro.
+ */
+function setErrNegative() {
+    const msg = "Maior ou igual a zero!";
+    document.getElementById("resposta").innerText = msg;
+    document.getElementById("resposta").style.color = "#CC3300";
+    document.getElementById("resposta").style.fontWeight = "700";
+}
+
+/**
+ * Função para alterar o estado dos elements que exibem
  * a resposta e o palpite como acerto.
- * @param {*} srt 
- * @param {*} num 
+ * @param {*} srt
+ * @param {*} num
  */
 function setPalpiteElementTrue(srt, num) {
     document.getElementById("resposta").innerText = srt;
     document.getElementById("resposta").style.color = "#32BF00";
     document.getElementById("resposta").style.fontWeight = "700";
-    document.getElementById("palpite").innerText = num;
 }
 
 /**
  * Função para alterar o estado dos elements que exibem
  * a resposta e o palpite como não acerto.
- * @param {*} srt 
- * @param {*} num 
+ * @param {*} srt
+ * @param {*} num
  */
 function setPalpiteElementFalse(srt, num) {
     document.getElementById("resposta").innerText = srt;
     document.getElementById("resposta").style.color = "#EF6C00";
     document.getElementById("resposta").style.fontWeight = "700";
-    document.getElementById("palpite").innerText = num;
 }
 
 /**
- * 
- * @param {*} number 
+ *
+ * @param {*} number
  * @returns {[]}
  */
-function ledSeven(number) {
+function ledSeven(number, count, resp) {
     var arrLed = Array();
+
+    let imgElement = "";
+    var imgPath = "";
+
+    if (count == 1) {
+        imgElement = "inicial_01";
+    }
+
+    if (count == 2) {
+        imgElement = "inicial_02";
+    }
+
+    if (count == 3) {
+        imgElement = "inicial_03";
+    }
+
+    if (resp == "menor") {
+        imgPath = "normal";
+    }
+
+    if (resp == "maior") {
+        imgPath = "normal";
+    }
+
+    if (resp == "igual") {
+        imgPath = "green";
+    }
+
+    if (resp == "erro") {
+        imgPath = "red";
+    }
+
+    var divDisplay = document.getElementById("display");
 
     switch (number) {
         case 0:
-            arrLed = [true, true, true, true, true, true, false];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-00.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 1:
-            arrLed = [false, true, true, false, false, false, false];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-01.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 2:
-            arrLed = [true, true, false, true, true, false, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-02.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 3:
-            arrLed = [true, true, true, true, false, false, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-03.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 4:
-            arrLed = [false, true, true, false, false, true, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-04.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 5:
-            arrLed = [true, false, true, true, false, true, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-05.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 6:
-            arrLed = [true, false, true, true, true, true, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-06.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 7:
-            arrLed = [true, true, true, false, false, false, false];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-07.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 8:
-            arrLed = [true, true, true, true, true, true, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-08.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
 
         case 9:
-            arrLed = [true, true, true, true, false, true, true];
+            var imgEl = document.createElement("img");
+            imgEl.src = imgPath + "/" + imgPath + "-09.svg";
+            imgEl.height = "50";
+            imgEl.id = count;
+            divDisplay.appendChild(imgEl);
             break;
     }
 
@@ -221,17 +355,20 @@ function ledSeven(number) {
 }
 
 /**
- * 
- * @param {*} numberSrt 
+ *
+ * @param {*} numberSrt
  * @returns {[]}
  */
-function writeNumbers(numberSrt) {
+function writeNumbers(numberSrt, resp) {
     let myFunc = (num) => Number(num);
 
     var arrNumber = Array.from(String(numberSrt), myFunc);
 
+    var count = 1;
+
     for (let index = 0; index < arrNumber.length; index++) {
-        console.log(ledSeven(arrNumber[index]));
+        ledSeven(arrNumber[index], count, resp);
+        count++;
     }
 
     return arrNumber;
